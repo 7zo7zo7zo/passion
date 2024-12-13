@@ -1,8 +1,22 @@
-[gd_scene load_steps=8 format=4 uid="uid://d0nr86saabqfj"]
+[gd_scene load_steps=12 format=4 uid="uid://d0nr86saabqfj"]
 
 [ext_resource type="Script" path="res://addons/func_godot/src/map/func_godot_map.gd" id="1_cbg15"]
 [ext_resource type="Resource" uid="uid://sufyga28macx" path="res://map_settings.tres" id="2_acu44"]
 [ext_resource type="Texture2D" uid="uid://cyg2snr1w5xw5" path="res://addons/func_godot/textures/default_texture.png" id="3_a7ek6"]
+[ext_resource type="PackedScene" uid="uid://c1n3ja5qoqkgu" path="res://player.tscn" id="4_mw87t"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_yrynt"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_pwbtp"]
+sky_material = SubResource("ProceduralSkyMaterial_yrynt")
+
+[sub_resource type="Environment" id="Environment_qv15q"]
+background_mode = 2
+sky = SubResource("Sky_pwbtp")
+tonemap_mode = 2
+glow_enabled = true
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_esawl"]
 albedo_texture = ExtResource("3_a7ek6")
@@ -33,6 +47,13 @@ points = PackedVector3Array(-2, 0, -2, -2, -1, -2, 2, -1, -2, 2, 0, -2, -2, 0, 2
 
 [node name="World" type="Node3D"]
 
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_qv15q")
+
 [node name="FuncGodotMap" type="Node3D" parent="."]
 script = ExtResource("1_cbg15")
 local_map_file = "res://maps/battle.map"
@@ -49,3 +70,5 @@ occluder = SubResource("ArrayOccluder3D_o0mnv")
 
 [node name="entity_0_brush_0_collision_shape" type="CollisionShape3D" parent="FuncGodotMap/entity_0_worldspawn"]
 shape = SubResource("ConvexPolygonShape3D_qnl4k")
+
+[node name="Player" parent="." instance=ExtResource("4_mw87t")]
