@@ -1,0 +1,14 @@
+[remap]
+
+importer="func_godot.map"
+type="Resource"
+uid="uid://diggj2vlm3jom"
+path="res://.godot/imported/battle.map-06eba11fbba8c2a2b11fc0dd417ca33a.tres"
+
+[deps]
+
+source_file="res://maps/battle.map"
+dest_files=["res://.godot/imported/battle.map-06eba11fbba8c2a2b11fc0dd417ca33a.tres"]
+
+[params]
+
