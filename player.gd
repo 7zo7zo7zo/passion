@@ -23,9 +23,6 @@ var wish_dir := Vector3.ZERO
 func get_move_speed():
 	return run_speed
 
-const SPEED = 5.0
-const JUMP_VELOCITY = 4.5
-
 func _ready() -> void:
 	# Hide WorldModel from camera
 	for child in %WorldModel.find_children("*", "VisualInstance3D", true, false):
