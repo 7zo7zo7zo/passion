@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://c1n3ja5qoqkgu"]
+[gd_scene load_steps=5 format=3 uid="uid://c1n3ja5qoqkgu"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_shsvd"]
 
@@ -8,6 +8,9 @@ height = 1.8
 [sub_resource type="CylinderMesh" id="CylinderMesh_68oro"]
 height = 1.8
 
+[sub_resource type="BoxMesh" id="BoxMesh_u02f8"]
+size = Vector3(0.1, 0.1, 0.1)
+
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_shsvd")
 
@@ -16,12 +19,19 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 shape = SubResource("CylinderShape3D_akkq6")
 
 [node name="WorldModel" type="Node3D" parent="."]
+unique_name_in_owner = true
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="WorldModel"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 mesh = SubResource("CylinderMesh_68oro")
 
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="WorldModel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -1)
+mesh = SubResource("BoxMesh_u02f8")
+
 [node name="Head" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
 
 [node name="Camera3D" type="Camera3D" parent="Head"]
+unique_name_in_owner = true
+cull_mask = 1048573
