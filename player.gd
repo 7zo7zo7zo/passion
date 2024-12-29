@@ -20,14 +20,27 @@ extends CharacterBody3D
 
 var wish_dir := Vector3.ZERO
 
+const VIEW_MODEL_LAYER = 9
+const WORLD_MODEL_LAYER = 2
+
 func get_move_speed():
 	return run_speed
 
 func _ready() -> void:
 	# Hide WorldModel from camera
+	update_view_and_world_model_masks()
+
+func update_view_and_world_model_masks() -> void:
 	for child in %WorldModel.find_children("*", "VisualInstance3D", true, false):
 		child.set_layer_mask_value(1, false)
-		child.set_layer_mask_value(2, true)
+		child.set_layer_mask_value(WORLD_MODEL_LAYER, true)
+	for child in %ViewModel.find_children("*", "VisualInstance3D", true, false):
+		child.set_layer_mask_value(1, false)
+		child.set_layer_mask_value(VIEW_MODEL_LAYER, true)
+		if child is GeometryInstance3D:
+			child.cast_shadow = false
+	%Camera3D.set_cull_mask_value(WORLD_MODEL_LAYER, false)
+	#%ThirdPersonCamera3D.set_cull_mask_value(VIEW_MODEL_LAYER, false)
 
 func _unhandled_input(event: InputEvent) -> void:
 	# Toggle mouse look when pressing ESC
@@ -71,6 +84,16 @@ func _handle_air_physics(delta: float) -> void:
 		var accel_speed = air_accel * air_move_speed * delta # Usually is adding this one.
 		accel_speed = min(accel_speed, add_speed_till_cap) # Works ok without this but sticking to the recipe
 		velocity += accel_speed * wish_dir
+	
+	if is_on_wall():
+		# The floating mode is much better and less jittery for surf
+		# This bit of code is tricky. Will toggle floating mode in air
+		# is_on_floor() never triggers in floating mode, and instead is_on_wall() does.
+		if is_surface_too_steep(get_wall_normal()):
+			self.motion_mode = CharacterBody3D.MOTION_MODE_FLOATING
+		else:
+			self.motion_mode = CharacterBody3D.MOTION_MODE_GROUNDED
+		clip_velocity(get_wall_normal(), 1, delta)
 
 func _handle_ground_physics(delta: float) -> void:
 	var cur_speed_in_wish_dir = velocity.dot(wish_dir)
@@ -93,3 +116,24 @@ func _handle_look(delta: float) -> void:
 		var target_look = Input.get_vector("left", "right", "lookup", "lookdown").normalized()
 		rotate_y(-target_look.x * controller_sensitivity)
 		%Camera3D.rotation.x = clamp(%Camera3D.rotation.x - target_look.y * controller_sensitivity, deg_to_rad(-90), deg_to_rad(90))
+
+func clip_velocity(normal: Vector3, overbounce : float, _delta : float) -> void:
+	# When strafing into wall, + gravity, velocity will be pointing much in the opposite direction of the normal
+	# So with this code, we will back up and off of the wall, cancelling out our strafe + gravity, allowing surf.
+	var backoff := velocity.dot(normal) * overbounce
+	# Not in original recipe. Maybe because of the ordering of the loop, in original source it
+	# shouldn't be the case that velocity can be away away from plane while also colliding.
+	# Without this, it's possible to get stuck in ceilings
+	if backoff >= 0: return
+	
+	var change := normal * backoff
+	velocity -= change
+	
+	# Second iteration to make sure not still moving through plane
+	# Not sure why this is necessary but it was in the original recipe so keeping it.
+	var adjust := velocity.dot(normal)
+	if adjust < 0.0:
+		velocity -= normal * adjust
+
+func is_surface_too_steep(normal : Vector3) -> bool:
+	return normal.angle_to(Vector3.UP) > floor_max_angle

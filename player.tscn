@@ -1,6 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://c1n3ja5qoqkgu"]
+[gd_scene load_steps=8 format=3 uid="uid://c1n3ja5qoqkgu"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_shsvd"]
+[ext_resource type="PackedScene" uid="uid://cgotwe45620yu" path="res://weapon_manager/weapon_manager.tscn" id="2_di0o4"]
+[ext_resource type="Resource" uid="uid://cw6owj0pub4r4" path="res://weapon_manager/pistol/pistol.tres" id="3_eykng"]
+[ext_resource type="Script" path="res://label.gd" id="4_nr3la"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_akkq6"]
 height = 1.8
@@ -34,4 +37,20 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
 
 [node name="Camera3D" type="Camera3D" parent="Head"]
 unique_name_in_owner = true
-cull_mask = 1048573
+
+[node name="BulletRayCast3D" type="RayCast3D" parent="Head/Camera3D"]
+target_position = Vector3(0, 0, -999)
+
+[node name="ViewModel" type="Node3D" parent="Head/Camera3D"]
+unique_name_in_owner = true
+
+[node name="WeaponManager" parent="." node_paths=PackedStringArray("player", "bullet_raycast", "view_model_container") instance=ExtResource("2_di0o4")]
+current_weapon = ExtResource("3_eykng")
+player = NodePath("..")
+bullet_raycast = NodePath("../Head/Camera3D/BulletRayCast3D")
+view_model_container = NodePath("../Head/Camera3D/ViewModel")
+
+[node name="Label" type="Label" parent="WeaponManager"]
+offset_right = 40.0
+offset_bottom = 23.0
+script = ExtResource("4_nr3la")

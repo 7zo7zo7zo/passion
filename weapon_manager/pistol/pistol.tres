@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="WeaponResource" load_steps=6 format=3 uid="uid://cw6owj0pub4r4"]
+
+[ext_resource type="AudioStream" uid="uid://c7jqau1m8v0og" path="res://assets/sounds/cc0-276959__gfl7__pistol-reload-sound.mp3" id="1_dbjl5"]
+[ext_resource type="Script" path="res://weapon_manager/weapon_resource.gd" id="1_rq020"]
+[ext_resource type="PackedScene" uid="uid://c74ywn2xejdyf" path="res://deagle - viewmodel.glb" id="2_d15io"]
+[ext_resource type="AudioStream" uid="uid://bfq6h25myd5pn" path="res://assets/sounds/cc0-371041__morganpurkis__single-gunshot-3.wav" id="3_850lu"]
+[ext_resource type="AudioStream" uid="uid://c5seqwt25ooln" path="res://assets/sounds/cc0-377145__nioczkus__pistol-draw-unholster.wav" id="4_08xya"]
+
+[resource]
+script = ExtResource("1_rq020")
+view_model = ExtResource("2_d15io")
+view_model_pos = Vector3(0.2, -0.4, 0.2)
+view_model_rot = Vector3(0, 3.142, 0)
+view_model_scale = Vector3(1, 1, 1)
+world_model_pos = Vector3(0, 0, 0)
+world_model_rot = Vector3(0, 0, 0)
+world_model_scale = Vector3(1, 1, 1)
+view_idle_anim = "Idle"
+view_equip_anim = "Unholster"
+view_shoot_anim = "Shoot"
+view_reload_anim = "Reload"
+shoot_sound = ExtResource("3_850lu")
+reload_sound = ExtResource("1_dbjl5")
+unholster_sound = ExtResource("4_08xya")
+damage = 10
+current_ammo = 7.0
+magazine_capacity = 7.0
+reserve_ammo = 50.0
+max_reserve_ammo = 50.0
+auto_fire = false
+max_fire_rate_ms = 100.0
